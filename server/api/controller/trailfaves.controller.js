@@ -1,6 +1,6 @@
 'use strict';
 
-const db = require('../model/model.js');
+var db = require('../model/model.js');
 
 module.exports = {
   //get trailfaves for specific user (return all specific user's trail ids in usersfavorites table then obtain all trail names)
@@ -73,22 +73,22 @@ module.exports = {
           favorite: req.params.id
         }
       })
-      .then( (favoriteID) => {
-        return db.UsersFavorites.findOrCreate({
-          where: {
-            userId: userID.dataValues.id,
-            favoriteId: favoriteID[0].dataValues.id
-          }
-        });
-      })
-      .then( (results) => {
-        res.sendStatus(201);    // json('Created'); <-- this seems to generate some
-                                // errors related to headers being sent again
-      })
-      .catch( (err) => {
-        console.error('Error POST request trailfaves under favorite', err);
-        res.sendStatus(404);
+    })
+    .then( (favoriteID) => {
+      return db.UsersFavorites.findOrCreate({
+        where: {
+          userId: userID.dataValues.id,
+          favoriteId: favoriteID[0].dataValues.id
+        }
       });
+    })
+    .then( (results) => {
+      res.sendStatus(201);    // json('Created'); <-- this seems to generate some
+                              // errors related to headers being sent again
+    })
+    .catch( (err) => {
+      console.error('Error POST request trailfaves under favorite', err);
+      res.sendStatus(404);
     });
   },
   //removes favorite for specific user (removes user-trail relation)
@@ -109,21 +109,21 @@ module.exports = {
           favorite: req.params.id
         }
       })
-      .then( (favoriteID) => {
-        return db.UsersFavorites.destroy({
-          where: {
-            userId: userID.dataValues.id,
-            favoriteId: favoriteID.dataValues.id
-          }
-        });
-      })
-      .then( (userfavorite) => {
-        res.sendStatus(200);
-      })
-      .catch( (err) => {
-        console.error('Error DELETE request trailfaves under favorite', err);
-        res.sendStatus(404);
+    })
+    .then( (favoriteID) => {
+      return db.UsersFavorites.destroy({
+        where: {
+          userId: userID.dataValues.id,
+          favoriteId: favoriteID.dataValues.id
+        }
       });
+    })
+    .then( (userfavorite) => {
+      res.sendStatus(200);
+    })
+    .catch( (err) => {
+      console.error('Error DELETE request trailfaves under favorite', err);
+      res.sendStatus(404);
     })
     .catch( (err) => {
       console.error('Error DELETE request trailfaves under user', err);

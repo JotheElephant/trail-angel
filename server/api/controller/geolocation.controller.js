@@ -18,17 +18,14 @@ module.exports = {
           return pins;
         })
         .then( (pins) => {
-          geoMapper.geoposAsync(key, ...pins)
-            .then( (geolocations) => {
-              // console.log("this is the lat and long for ", geolocations);
-              res.send(geolocations);
-            })
-            .catch(err => {
-              console.error('Error getting geolocation: ', err);
-            });
+          return geoMapper.geoposAsync(key, ...pins)
+        })
+        .then( (geolocations) => {
+          // console.log("this is the lat and long for ", geolocations);
+          res.send(geolocations);
         })
         .catch( (err) => {
-          console.log('this trail does not have any pins yet', err);
+          console.log('Error GET request: this trail does not have any pins yet', err);
           res.sendStatus(404);
         });
     },
@@ -48,7 +45,7 @@ module.exports = {
           res.sendStatus(201);
         })
         .catch( (err) => {
-          console.log('The new pins have NOT been saved!', err);
+          console.log('Error POST Request: The new pins have NOT been saved!', err);
           res.sendStatus(404);
         });
     },
@@ -63,7 +60,7 @@ module.exports = {
           res.sendStatus(200);
         })
         .catch( (err) => {
-          console.log('Error removing pins from map', err);
+          console.log('Error DELETE Request: removing pins from map', err);
           res.sendStatus(404);
         });
     },
@@ -78,18 +75,15 @@ module.exports = {
       }
       geoMapper.delAsync(key)
         .then( (status) => {
-          geoMapper.geoaddAsync(key, ...pins) //if we get the format we want, then this is OK
-            .then( (status) => {
-              console.log('Pins have been replaced!', status);
-              res.sendStatus(200);
-            })
-            .catch( (err) => {
-              console.log('Pins have not been saved!', err);
-              res.sendStatus(404);
-            });
+          return geoMapper.geoaddAsync(key, ...pins); //if we get the format we want, then this is OK
+        })
+        .then( (status) => {
+          console.log('Pins have been replaced!', status);
+          res.sendStatus(200);
         })
         .catch( (err) => {
-          console.log('mapping points on this trail was not deleted', err);
+          console.log('Error PUT Request: Pins have not been saved or mapping points on this trail was not deleted!', err);
+          res.sendStatus(404);
         });
     },
     getDistance: function(req, res) {
@@ -111,15 +105,10 @@ module.exports = {
           res.json(totalDistance);
         })
         .catch((err) => {
-          console.log('error getting distance data', err);
+          console.log('Error GETDISTANCE request: getting distance data', err);
           res.sendStatus(404);
         });
     }
-
-    // getDistance2points: function(req, res) {
-    //   //GEODIST
-    //   //may not use this one
-    // }
   },
 };
 

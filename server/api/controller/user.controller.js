@@ -16,6 +16,7 @@ module.exports = {
       res.sendStatus(201);
     })
     .catch( (err) => {
+      console.error('Error POST request: user does not exist or cannot be created');
       res.sendStatus(404);
     });
   },

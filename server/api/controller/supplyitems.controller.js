@@ -62,14 +62,14 @@ module.exports = {
           itemName: req.params.name
         }
       })
-      .then( (results) => {
-        res.sendStatus(201);    // json('Created'); <-- this seems to generate some
-                                // errors related to headers being sent again
-      })
-      .catch( (err) => {
-        console.error('Error POST request to supply items', err);
-        res.sendStatus(404);
-      });
+    })
+    .then( (results) => {
+      res.sendStatus(201);    // json('Created'); <-- this seems to generate some
+                              // errors related to headers being sent again
+    })
+    .catch( (err) => {
+      console.error('Error POST request to supply items', err);
+      res.sendStatus(404);
     });
   },
   update: function(req, res) {
